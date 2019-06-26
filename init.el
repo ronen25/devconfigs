@@ -1,6 +1,6 @@
 ;; RONEN'S EMACS CONFIG
 ;; -----------------------
-;; Last change: 24/06/2019
+;; Last change: 25/06/2019
 
 ;; Add MELPA
 (require 'package)
@@ -51,7 +51,7 @@
     ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
  '(package-selected-packages
    (quote
-    (spacemacs-theme function-args company-c-headers sr-speedbar zygospore helm-gtags helm yasnippet ws-butler volatile-highlights use-package undo-tree iedit dtrt-indent counsel-projectile company clean-aindent-mode anzu))))
+    (beacon spacemacs-theme function-args company-c-headers sr-speedbar zygospore helm-gtags helm yasnippet ws-butler volatile-highlights use-package undo-tree iedit dtrt-indent counsel-projectile company clean-aindent-mode anzu))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -93,3 +93,24 @@
 
 ;; Enable menubar
 (menu-bar-mode 1)
+
+;; Default shell for terminal,
+;; and don't ask before exiting it.
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(defvar default-term-shell "/bin/bash")
+(defadvice ansi-term (before force-bash)
+  (interactive (list default-term-shell)))
+(ad-activate 'ansi-term)
+
+;; Bind ansi-term to super+enter
+(global-set-key (kbd "<s-return>") 'ansi-term)
+
+;; Disable the annoying bell shit
+(setq ring-bell-function 'ignore)
+
+;; Beacon line highlight
+(use-package beacon
+  :ensure t
+  :init
+  (beacon-mode 1))
