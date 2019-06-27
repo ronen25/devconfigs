@@ -45,16 +45,30 @@
 
 ;; Configure keybindings for Helm
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "M-x") 'helm-M-x)
+
 #+END_SRC
 
 * UI Config
+** Beacon
 #+BEGIN_SRC emacs-lisp
   ;; Beacon line highlight
   (use-package beacon
     :ensure t
     :init
   (beacon-mode 1))
+#+END_SRC
 
+** Rainbow bracket highlight
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :ensure t
+    :init
+    (rainbow-delimiters-mode 1))
+#+END_SRC
+
+** Disable toolbar + scrollbar
+#+BEGIN_SRC emacs-lisp
   ;; Disable toolbar and scrollbar
   (toggle-scroll-bar -1)
   (tool-bar-mode -1)
@@ -80,5 +94,72 @@
 * Editing
 ** Line Numbers
 #+BEGIN_SRC emacs-lisp
-(setq global-linum-mode t)
+(line-number-mode 1)
+#+END_SRC
+
+** Column Numbers (Modeline)
+#+BEGIN_SRC emacs-lisp
+  (column-number-mode 1)
+#+END_SRC
+
+* Config Edit/Reload
+#+BEGIN_SRC emacs-lisp
+
+  (defun config-visit ()
+    (interactive)
+    (find-file "~/.emacs.d/config.org"))
+  (global-set-key (kbd "C-c e") 'config-visit)
+
+  (defun config-reload ()
+    (interactive)
+    (org-babel-load-file (expand-file-name "~/.emacs.d/config.org")))
+
+  (global-set-key (kbd "C-C r") 'config-reload)
+
+#+END_SRC
+* Window Switching/Resizing
+#+BEGIN_SRC emacs-lisp
+  (use-package switch-window
+    :ensure t
+    :config
+    (setq switch-window-input-style 'minibuffer)
+    (setq switch-window-increase 4)
+    (setq switch-window-thershold 2)
+    (setq switch-window-shortcut-appearance 'asciiart)
+    :bind
+    ([remap other-window] . switch-window))
+
+  ;; Split window and follow to it
+  (defun split-and-follow-h ()
+    (interactive)
+    (split-window-below)
+    (balance-windows)
+    (other-window 1))
+
+   (defun split-and-follow-v ()
+    (interactive)
+    (split-window-right)
+    (balance-windows)
+    (other-window 1))
+
+  (global-set-key (kbd "C-x 2") 'split-and-follow-h)
+  (global-set-key (kbd "C-x 3") 'split-and-follow-v)
+#+END_SRC
+* Company
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :init
+    (add-hook 'after-init-hook 'global-company-mode))
+#+END_SRC
+* Modeline
+#+BEGIN_SRC emacs-lisp
+
+  (use-package spaceline
+    :ensure t
+    :config
+    (require 'spaceline-config)
+    (setq powerline-default-separator (quote arrow))
+    (spaceline-spacemacs-theme))
+
 #+END_SRC
